@@ -1,0 +1,513 @@
+#BFS
+from collections import deque
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    visited.add(start)
+
+    while queue:
+        vertex = queue.popleft()
+        print(vertex, end=" ")
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
+
+# Example graph represented as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Starting vertex for BFS
+start_vertex = 'A'
+
+print("BFS traversal starting from vertex", start_vertex)
+bfs(graph, start_vertex)
+
+
+
+
+
+
+
+
+#DFS
+
+
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+
+    visited.add(start)
+    print(start, end=" ")
+
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+
+# Example graph represented as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Starting vertex for DFS
+start_vertex = 'A'
+
+print("DFS traversal starting from vertex", start_vertex)
+dfs(graph, start_vertex)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#BEST FIRST SEARCH
+
+import heapq
+
+def best_first_search(graph, start, goal, heuristic):
+    visited = set()
+    priority_queue = [(heuristic(start), start)]  # (heuristic value, node)
+    
+    while priority_queue:
+        h_cost, current_node = heapq.heappop(priority_queue)
+        
+        if current_node == goal:
+            return True  # Goal reached
+        
+        visited.add(current_node)
+        
+        for neighbor in graph[current_node]:
+            if neighbor not in visited:
+                heapq.heappush(priority_queue, (heuristic(neighbor), neighbor))
+    
+    return False  # Goal not reachable
+
+# Example graph represented as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Heuristic function (for demonstration purposes, you may replace it with a more meaningful one)
+def heuristic(node):
+    # In this example, heuristic values are simply the lengths of the paths to the goal
+    distances_to_goal = {
+        'A': 2,
+        'B': 1,
+        'C': 1,
+        'D': 2,
+        'E': 1,
+        'F': 1
+    }
+    return distances_to_goal[node]
+
+start = 'A'
+goal = 'F'
+
+if best_first_search(graph, start, goal, heuristic):
+    print(f"Goal '{goal}' is reachable from '{start}'.")
+else:
+    print(f"Goal '{goal}' is not reachable from '{start}'.")
+
+
+
+
+
+
+#MINIMAX ALGORITHM
+
+# A simple Python3 program to find
+# maximum score that
+# maximizing player can get
+import math
+
+def minimax (curDepth, nodeIndex,
+			maxTurn, scores, 
+			targetDepth):
+
+	# base case : targetDepth reached
+	if (curDepth == targetDepth): 
+		return scores[nodeIndex]
+	
+	if (maxTurn):
+		return max(minimax(curDepth + 1, nodeIndex * 2, 
+					False, scores, targetDepth), 
+				minimax(curDepth + 1, nodeIndex * 2 + 1, 
+					False, scores, targetDepth))
+	
+	else:
+		return min(minimax(curDepth + 1, nodeIndex * 2, 
+					True, scores, targetDepth), 
+				minimax(curDepth + 1, nodeIndex * 2 + 1, 
+					True, scores, targetDepth))
+	
+# Driver code
+scores = [3, 5, 2, 9, 12, 5, 23, 23]
+
+treeDepth = math.log(len(scores), 2)
+
+print("The optimal value is : ", end = "")
+print(minimax(0, 0, True, scores, treeDepth))
+
+# This code is contributed
+# by rootshadow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#LEARNING ALGORITHM
+
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Example historical data (house size and price)
+X_train = np.array([[100], [200], [300], [400]])  # House size (in square feet)
+y_train = np.array([100000, 200000, 300000, 400000])  # Price (in dollars)
+
+# Train the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Real-time prediction
+X_new = np.array([[250]])  # New house size to predict price
+predicted_price = model.predict(X_new)
+print("Predicted price for a house with size 250 sq. ft:", predicted_price[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#CSP
+# Example: Implementing a scheduling system using Constraint Satisfaction Problem
+
+from constraint import Problem, AllDifferentConstraint
+
+def schedule():
+    problem = Problem()
+    timeslots = range(1, 6)  # Example timeslots
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']  # Example days
+
+    # Define variables
+    for day in days:
+        for timeslot in timeslots:
+            problem.addVariable(day + str(timeslot), ['Class1', 'Class2', 'Break'])
+
+    # Add constraints
+    for day in days:
+        problem.addConstraint(AllDifferentConstraint(), [day + str(timeslot) for timeslot in timeslots])
+
+    # Add additional constraints if needed
+
+    solutions = problem.getSolutions()
+    return solutions
+
+# Usage
+print(schedule())
+
+
+
+
+
+
+
+#NLP
+
+positive_words = ["good", "great", "excellent", "love", "like"]
+negative_words = ["bad", "poor", "terrible", "hate", "dislike"]
+
+user_input = input("Enter your feedback: ")
+
+positive_count = sum(user_input.lower().count(word) for word in positive_words)
+negative_count = sum(user_input.lower().count(word) for word in negative_words)
+
+if positive_count > negative_count:
+    sentiment = "Positive"
+elif positive_count < negative_count:
+    sentiment = "Negative"
+else:
+    sentiment = "Neutral"
+
+print(f"Sentiment: {sentiment}")
+
+
+
+
+
+
+#intelligent agent
+
+from time import sleep
+
+class WashingMachine:
+    def _init_(self):
+        self.water_level = 0
+        self.detergent_level = 100  # Assume full detergent initially
+        self.dirty_clothes = 0
+        self.clean_clothes = 0
+
+    def add_water(self, amount):
+        self.water_level += amount
+
+    def add_detergent(self, amount):
+        self.detergent_level += amount
+
+    def add_dirty_clothes(self, amount):
+        self.dirty_clothes += amount
+
+    def wash(self):
+        
+        if self.water_level >= 10 and self.detergent_level >= 5 and self.dirty_clothes > 0:
+            while(self.dirty_clothes):
+                print("Starting washing machine...")
+                sleep(2)
+                print("Adding detergent...")
+                sleep(2)
+                print("Filling water...")
+                sleep(2)
+                self.water_level -= 10
+                self.detergent_level -= 5
+                self.dirty_clothes -= 1
+                self.clean_clothes += 1
+                print("Washing completed successfully!")
+            else:
+                print("Insufficient resources or no dirty clothes to wash.")
+
+# Example usage
+washing_machine = WashingMachine()
+washing_machine.add_water(20)
+washing_machine.add_detergent(10)
+washing_machine.add_dirty_clothes(3)
+washing_machine.wash()
+print("Clean clothes:", washing_machine.clean_clothes)
+
+
+
+
+
+
+
+
+
+unification:
+
+def unify(x, y, s=None):
+    s = {} if s is None else s
+    if x == y: return s
+    if isinstance(x,str): return unify_var(x,y,s)
+    if isinstance(y,str): return unify_var(y,x,s)
+    if isinstance(x,list) and isinstance(y,list):
+        if len(x)!=len(y): return None
+        return s if all(unify(xi,yi,s) for xi,yi in zip(x,y)) else None
+    return None
+
+def unify_var(v, x, s):
+    if v in s: return unify(s[v],x,s)
+    if x in s: return unify(v,s[x],s)
+    s[v] = x
+    return s
+
+print(unify(['x', 'y'], ['z', 'z']))
+
+
+
+#BYESIAN 
+import numpy as np
+
+# Probabilities
+p_flu_given_symptoms = np.array([
+    [[0.9, 0.1], [0.6, 0.4], [0.7, 0.3]],
+    [[0.6, 0.4], [0.4, 0.6], [0.3, 0.7]]
+])
+
+# Symptoms
+symptoms = [1, 1, 1]  # Fever, Cough, Fatigue
+
+def inference(symptoms):
+    flu_prob = np.prod(p_flu_given_symptoms[:, range(len(symptoms)), symptoms], axis=1)
+    flu_prob /= np.sum(flu_prob)
+    return flu_prob
+
+result = inference(symptoms)
+print("Probability distribution of Flu given symptoms:", result)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
